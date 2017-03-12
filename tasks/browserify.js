@@ -1,10 +1,10 @@
-let defaults = require('../helpers/defaults');
+let defaults = require('./helpers/defaults');
 
 // done, watch, sourceFile, targetFile, targetSourceMapFile
 let regenerateScripts = function (customOptions) {
 		let options = defaults({
 			done: function(){
-				// noop
+					// noop
 			},
 			watch: false,
 			sourceFile: 'main.source.js',
@@ -30,7 +30,7 @@ let regenerateScripts = function (customOptions) {
     let bundle = function (done) {
         let stream;
         let output;
-        let swallowError = require('../helpers/swallowError');
+        let swallowError = require('./helpers/swallowError');
         let fs = require('fs');
 
         console.log(`Regenerating ${options.targetFile} from ${options.sourceFile}`);
@@ -48,27 +48,27 @@ let regenerateScripts = function (customOptions) {
         	let targetSourceMapFile;
 
         	if(options.targetSourceMapFile === null){
-        		targetSourceMapFile = `${options.targetFile}.map`;
+        			targetSourceMapFile = `${options.targetFile}.map`;
         	}else{
-        		targetSourceMapFile = options.targetSourceMapFile;
+        			targetSourceMapFile = options.targetSourceMapFile;
         	}
 
-	        stream
+	        stream = stream
 	            .pipe(exorcist(targetSourceMapFile));
         }
 
         stream
             .pipe(output)
             .on('close', function () {
-		      		console.log('scripts regenerated');
+		      			console.log('scripts regenerated');
 
-		      		if(typeof done !== 'undefined'){
-		      			done();
-		      		}
+			      		if(typeof done !== 'undefined'){
+			      			done();
+			      		}
 		      	});
     };
 
-    if (watch == true) {
+    if (options.watch == true) {
     		let watchify = require('watchify');
 
     		// if we're watching files, some more values need 
@@ -94,7 +94,7 @@ let regenerateScripts = function (customOptions) {
 
         // Have to bundle when watching, because watchify needs to start tracking files.
         // When serving files, this means JavaScript will be generated twice, during build and serve tasks.
-        bundle(done);
+        bundle(options.done);
     } else {
         browserifyInstance = browserify({
             debug: true,
@@ -104,7 +104,7 @@ let regenerateScripts = function (customOptions) {
         browserifyInstance.add(options.sourceFile);
     		browserifyInstance.transform(babelify);
 
-    		bundle(done);
+    		bundle(options.done);
     }
 };
 
