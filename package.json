@@ -1,10 +1,10 @@
 {
   "name": "senfino-gulp-tasks",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "index.js",
   "author": "Senfino",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "babelify": "^7.3.0",
     "browserify": "^14.1.0",
     "exorcist": "^0.4.0",
