@@ -88,7 +88,7 @@ let regenerateScripts = function (customOptions) {
         stream
             .pipe(output)
             .on('close', function () {
-		      			console.log('scripts regenerated');
+		      			console.log('Scripts regenerated');
 
 			      		if(typeof done !== 'undefined'){
 			      			done();
