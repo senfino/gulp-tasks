@@ -1,0 +1,15 @@
+{
+  "name": "gulp-tasks",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Senfino",
+  "license": "MIT",
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.1.0",
+    "exorcist": "^0.4.0",
+    "gulp": "gulpjs/gulp#4.0",
+    "jquery": "^3.1.1",
+    "watchify": "^3.9.0"
+  }
+}
