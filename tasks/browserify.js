@@ -32,10 +32,14 @@ let regenerateScripts = function (customOptions) {
         let output;
         let swallowError = require('./helpers/swallowError');
         let fs = require('fs');
+        let path = require('path');
 
         console.log(`Regenerating ${options.targetFile} from ${options.sourceFile}`);
 
-        output = fs.createWriteStream(options.targetFile);
+        output = fs.createWriteStream(path.join(
+        				options.baseDirectory, 
+        				options.targetFile
+    				));
 
         stream = browserifyInstance
             .bundle()
@@ -48,13 +52,37 @@ let regenerateScripts = function (customOptions) {
         	let targetSourceMapFile;
 
         	if(options.targetSourceMapFile === null){
-        			targetSourceMapFile = `${options.targetFile}.map`;
+        			targetSourceMapFile = path.join(
+        					options.baseDirectory,
+        					`${options.targetFile}.map`
+        			);
         	}else{
-        			targetSourceMapFile = options.targetSourceMapFile;
+        			targetSourceMapFile = path.join(
+	        				options.baseDirectory,
+	        				options.targetSourceMapFile
+        			);
         	}
 
+        	let sourceMapFileRelative = 
+        			path.relative(
+			        		path.dirname(
+			        				path.join(
+							        		__dirname, 
+							        		options.baseDirectory, 
+							        		options.targetFile
+						        	)
+						      ),
+				        	path.join(
+				        			__dirname,
+				        			targetSourceMapFile
+				        	)
+				      );
+
 	        stream = stream
-	            .pipe(exorcist(targetSourceMapFile));
+	            .pipe(exorcist(
+		            	targetSourceMapFile, 
+		            	sourceMapFileRelative
+	            ));
         }
 
         stream
@@ -125,6 +153,7 @@ let createBuildTask = function(customOptions){
 			sourceFile: options.sourceScriptPath,
 			targetFile: options.targetScriptPath,
 			separateSourceMap: options.separateSourceMap,
+			baseDirectory: options.baseDirectory,
 			targetSourceMapFile: options.targetScriptSourceMapPath
 		});
 	};
